@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAKS OMNIVERSE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body style="background:#000000;">
+  <!-- PITCH-BLACK AMONG-US STYLE SPACE INTRO OVERLAY -->
+  <div id="omniverse-intro" class="intro-overlay" style="display:none;">
+    <canvas id="intro-starfield-canvas" class="intro-canvas"></canvas>
+    <div class="intro-center-stage">
+      <div class="intro-horizon-beam"></div>
+      <div class="intro-title-wrap">
+        <div class="intro-title-main" data-text="RAKS OMNIVERSE">RAKS OMNIVERSE</div>
+        <div class="intro-subtitle-track">A UNIVERSE OF IDEAS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Additive FX Canvas for Like -> Spark Flight Trajectory -->
+  <canvas id="spark-flight-canvas" style="position:fixed; inset:0; width:100vw; height:100vh; pointer-events:none; z-index:500;"></canvas>
+
+  <div id="app-shell">
+    <!-- Glassmorphism Collapsible Navbar (Hidden Unless Clicked by Arrow) -->
+    <aside class="cosmic-sidebar" id="sidebar"></aside>
+
+    <!-- Floating Glassmorphic Arrow Button to Toggle Navbar -->
+    <button class="nav-arrow-toggle" id="nav-arrow-toggle" aria-label="Toggle Navigation" title="Open Navigation">
+      <svg id="nav-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Main Full-Viewport Pitch-Black Stage -->
+    <main class="main-stage">
+      <header class="cosmic-topbar" id="topbar"></header>
+      <section class="view-container" id="view-root"></section>
+    </main>
+  </div>
+
+  <!-- Global Modal, Notification Drawer, Search Palette & Ceremony Containers -->
+  <div id="overlay-root"></div>
+  <div id="ceremony-root"></div>
+  <div id="toast-root" style="position:fixed; bottom:24px; right:24px; z-index:300; display:flex; flex-direction:column; gap:10px;"></div>
+
+  <script src="/cosmic-engine.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

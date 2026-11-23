@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+cd "$(dirname "$0")"
+export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+node --env-file-if-exists=.env --no-warnings server.js

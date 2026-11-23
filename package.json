@@ -1,0 +1,17 @@
+{
+  "name": "raks-omniverse",
+  "version": "1.0.0",
+  "description": "RAKS OMNIVERSE — Immersive Futuristic School Ecosystem & Interactive 3D Digital Universe",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env --no-warnings server.js",
+    "go": "node --env-file-if-exists=.env --no-warnings server.js",
+    "dev": "node --env-file-if-exists=.env --no-warnings server.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "mongodb": "^7.9.1"
+  }
+}
