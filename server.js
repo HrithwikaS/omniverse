@@ -373,6 +373,12 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, 403, { error: `This account is currently ${user.account_status}. Contact the Universe Administrator.` });
       }
 
+      const hasPriorSession = await store.hasAnySession(user.id);
+      const isFirstLogin = !user.tutorial_seen && !hasPriorSession;
+      if (!user.tutorial_seen) {
+        await store.markTutorialSeen(user.id);
+      }
+
       const token = crypto.randomBytes(24).toString('hex');
       await store.createSession(token, user.id);
 
@@ -388,10 +394,12 @@ const server = http.createServer(async (req, res) => {
         bio: user.bio,
         avatar_color: user.avatar_color,
         account_status: user.account_status,
+        full_access: user.full_access ? 1 : 0,
+        tutorial_seen: 1,
       };
 
       res.setHeader('Set-Cookie', `omniverse_token=${token}; Path=/; HttpOnly; SameSite=Lax`);
-      return sendJson(res, 200, { token, user: safeUser });
+      return sendJson(res, 200, { token, user: safeUser, isFirstLogin });
     }
 
     if (pathname === '/api/auth/change-password' && method === 'POST') {
@@ -576,11 +584,27 @@ const server = http.createServer(async (req, res) => {
       const galaxyId = pathname.split('/')[3];
       const galaxy = await store.getGalaxyById(galaxyId);
       if (!galaxy) return sendJson(res, 404, { error: 'Galaxy not found.' });
+      const hasFullAccess = currentUser.role === 'admin' || !!currentUser.full_access;
+      if (!hasFullAccess && galaxy.teacher_id !== currentUser.id) {
+        return sendJson(res, 403, { error: 'Only Admins, Full Access teachers, or the assigned Galaxy Head can modify this galaxy.' });
+      }
 
       const body = await parseBody(req);
       const updated = await store.updateGalaxy(galaxyId, body, currentUser.role === 'admin');
       await store.logActivity(currentUser, 'GALAXY_UPDATED', `Updated galaxy "${galaxy.name}"`, 'galaxy', galaxyId);
       return sendJson(res, 200, { galaxy: updated });
+    }
+
+    if (pathname.startsWith('/api/galaxies/') && method === 'DELETE') {
+      if (!currentUser || (currentUser.role !== 'admin' && !currentUser.full_access)) {
+        return sendJson(res, 403, { error: 'Only Administrators and Full Access teachers can delete galaxies.' });
+      }
+      const galaxyId = pathname.split('/')[3];
+      const galaxy = await store.getGalaxyById(galaxyId);
+      if (!galaxy) return sendJson(res, 404, { error: 'Galaxy not found.' });
+      await store.deleteGalaxy(galaxyId);
+      await store.logActivity(currentUser, 'GALAXY_DELETED', `Deleted galaxy "${galaxy.name}"`, 'galaxy', galaxyId);
+      return sendJson(res, 200, { deleted: true });
     }
 
     // =========================================================================
@@ -692,6 +716,33 @@ const server = http.createServer(async (req, res) => {
       }
 
       return sendJson(res, 200, { mission: updatedMission, star: activatedStar });
+    }
+
+    // =========================================================================
+    // STAR MANAGEMENT (GALAXY HEAD, FULL ACCESS TEACHER, ADMIN)
+    // =========================================================================
+    if (pathname.startsWith('/api/stars/') && !pathname.endsWith('/spark') && (method === 'PUT' || method === 'DELETE')) {
+      if (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'admin')) {
+        return sendJson(res, 403, { error: 'Only Administrators, Full Access teachers, or the Galaxy Head can modify or remove stars.' });
+      }
+      const starId = pathname.split('/')[3];
+      const star = await store.getStarById(starId);
+      if (!star) return sendJson(res, 404, { error: 'Star not found.' });
+      const galaxy = await store.getGalaxyById(star.galaxy_id);
+      const isHead = galaxy && galaxy.teacher_id === currentUser.id;
+      const canManage = currentUser.role === 'admin' || !!currentUser.full_access || isHead;
+      if (!canManage) {
+        return sendJson(res, 403, { error: 'Only the Galaxy Head, a Full Access teacher, or an Admin can modify or delete this star.' });
+      }
+      if (method === 'DELETE') {
+        await store.deleteStar(starId);
+        await store.logActivity(currentUser, 'STAR_DELETED', `Removed star "${star.title}" from ${galaxy ? galaxy.name : 'Omniverse'}`, 'star', starId);
+        return sendJson(res, 200, { deleted: true });
+      }
+      const body = await parseBody(req);
+      const updated = await store.updateStar(starId, body);
+      await store.logActivity(currentUser, 'STAR_UPDATED', `Updated star "${updated ? updated.title : star.title}"`, 'star', starId);
+      return sendJson(res, 200, { star: updated });
     }
 
     // =========================================================================

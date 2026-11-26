@@ -774,7 +774,7 @@
           <h2 style="font-size:20px; font-weight:600; color:var(--text-primary); margin-bottom:6px;">${escapeHtml(g.name)}</h2>
           <p style="font-size:12.5px; color:var(--text-secondary); margin-bottom:10px;">${escapeHtml(g.description)}</p>
           <div style="font-size:11.5px; color:var(--text-muted); margin-bottom:12px;">
-            Galaxy Head: <span style="color:var(--text-secondary);">${escapeHtml(g.teacher_name || 'Mentor')}</span>
+            Galaxy Head: <span style="color:var(--text-secondary);">${escapeHtml(g.teacher_name || 'Unassigned')}</span>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             ${
@@ -923,6 +923,8 @@
     if (!overlay) return;
 
     const isOwnStar = state.user && star.student_id === state.user.id;
+    const starGal = state.universe.galaxies.find((g) => g.id === star.galaxy_id);
+    const canManageStar = state.user && (state.user.role === 'admin' || !!state.user.full_access || (starGal && starGal.teacher_id === state.user.id));
     const thresholds = state.universe.thresholds || { bright: 2, radiant: 4, supernova: 6 };
     const progressPct = Math.min(100, Math.round((star.stellar_energy / thresholds.supernova) * 100));
 
@@ -1070,8 +1072,16 @@
                 )
                 .join('')}
             </div>
-            <div style="font-size:11px; color:var(--text-muted);">
-              Approved ${new Date(star.approval_date).toLocaleDateString()}
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              ${
+                canManageStar
+                  ? `<button class="btn btn-cyan btn-sm" id="edit-star-btn">Edit Star</button>
+                     <button class="btn btn-danger btn-sm" id="delete-star-btn">Delete Star</button>`
+                  : ''
+              }
+              <span style="font-size:11px; color:var(--text-muted);">
+                Approved ${new Date(star.approval_date).toLocaleDateString()}
+              </span>
             </div>
           </div>
         </div>
@@ -1081,6 +1091,26 @@
     document.getElementById('close-star-modal').addEventListener('click', () => {
       overlay.innerHTML = '';
     });
+
+    const editStarBtn = document.getElementById('edit-star-btn');
+    if (editStarBtn) {
+      editStarBtn.addEventListener('click', () => openEditStarModal(star));
+    }
+    const deleteStarBtn = document.getElementById('delete-star-btn');
+    if (deleteStarBtn) {
+      deleteStarBtn.addEventListener('click', async () => {
+        if (!window.confirm(`Delete star "${star.title}"? This cannot be undone.`)) return;
+        try {
+          await api(`/api/stars/${star.id}`, { method: 'DELETE' });
+          overlay.innerHTML = '';
+          await refreshUniverseData();
+          updateCosmicMapHUD();
+          showToast('Star Removed', `Deleted "${star.title}".`, 'info');
+        } catch (err) {
+          showToast('Error', err.message, 'error');
+        }
+      });
+    }
     document.getElementById('star-modal-backdrop').addEventListener('click', (e) => {
       if (e.target.id === 'star-modal-backdrop') overlay.innerHTML = '';
     });
@@ -1157,6 +1187,167 @@
         }
       });
     }
+  }
+
+  function openEditStarModal(star) {
+    const overlay = document.getElementById('overlay-root');
+    if (!overlay) return;
+    overlay.innerHTML = `
+      <div class="modal-backdrop" id="edit-star-backdrop">
+        <div class="modal-panel" style="max-width:600px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h2 style="font-size:20px; font-weight:600;">Edit Star</h2>
+            <button class="icon-btn" id="close-edit-star">${ICONS.close}</button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Star Title *</label>
+              <input type="text" class="form-input" id="es-title" value="${escapeHtml(star.title || '')}" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <input type="text" class="form-input" id="es-cat" value="${escapeHtml(star.category || '')}" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Explorer Name</label>
+              <input type="text" class="form-input" id="es-exp-name" value="${escapeHtml(star.student_name || '')}" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Explorer Grade</label>
+              <input type="text" class="form-input" id="es-exp-grade" value="${escapeHtml(star.student_grade || '')}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tagline</label>
+            <input type="text" class="form-input" id="es-tagline" value="${escapeHtml(star.tagline || '')}" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="es-desc">${escapeHtml(star.description || '')}</textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Objectives</label>
+              <textarea class="form-textarea" id="es-obj" style="min-height:70px;">${escapeHtml(star.objectives || '')}</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Outcomes</label>
+              <textarea class="form-textarea" id="es-out" style="min-height:70px;">${escapeHtml(star.outcomes || '')}</textarea>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+            <button class="btn btn-ghost" id="cancel-edit-star">Cancel</button>
+            <button class="btn btn-primary" id="save-edit-star">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const closeBack = () => openStarModal(state.universe.stars.find((s) => s.id === star.id) || star);
+    document.getElementById('close-edit-star').addEventListener('click', closeBack);
+    document.getElementById('cancel-edit-star').addEventListener('click', closeBack);
+    document.getElementById('save-edit-star').addEventListener('click', async () => {
+      const title = document.getElementById('es-title').value.trim();
+      if (!title) {
+        showToast('Validation Error', 'Star title is required.', 'error');
+        return;
+      }
+      try {
+        await api(`/api/stars/${star.id}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            title,
+            category: document.getElementById('es-cat').value.trim(),
+            explorer_name: document.getElementById('es-exp-name').value.trim(),
+            explorer_grade: document.getElementById('es-exp-grade').value.trim(),
+            tagline: document.getElementById('es-tagline').value.trim(),
+            description: document.getElementById('es-desc').value.trim(),
+            objectives: document.getElementById('es-obj').value.trim(),
+            outcomes: document.getElementById('es-out').value.trim(),
+          }),
+        });
+        await refreshUniverseData();
+        const updated = state.universe.stars.find((s) => s.id === star.id);
+        if (updated) openStarModal(updated);
+        else overlay.innerHTML = '';
+        updateCosmicMapHUD();
+        showToast('Star Updated', `Saved changes to "${title}".`, 'success');
+      } catch (err) {
+        showToast('Error', err.message, 'error');
+      }
+    });
+  }
+
+  function openEditGalaxyModal(galaxy, onSaved) {
+    const overlay = document.getElementById('overlay-root');
+    if (!overlay) return;
+    overlay.innerHTML = `
+      <div class="modal-backdrop" id="edit-gal-backdrop">
+        <div class="modal-panel" style="max-width:580px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h2 style="font-size:20px; font-weight:600;">Edit Galaxy</h2>
+            <button class="icon-btn" id="close-edit-gal">${ICONS.close}</button>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Galaxy Name *</label>
+              <input type="text" class="form-input" id="eg-name" value="${escapeHtml(galaxy.name || '')}" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <input type="text" class="form-input" id="eg-cat" value="${escapeHtml(galaxy.category || '')}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="eg-desc">${escapeHtml(galaxy.description || '')}</textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Grade Eligibility</label>
+              <input type="text" class="form-input" id="eg-grades" value="${escapeHtml(galaxy.grade_eligibility || '')}" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Meeting Schedule</label>
+              <input type="text" class="form-input" id="eg-meet" value="${escapeHtml(galaxy.meeting_info || '')}" />
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+            <button class="btn btn-ghost" id="cancel-edit-gal">Cancel</button>
+            <button class="btn btn-primary" id="save-edit-gal">Save Galaxy</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const close = () => { overlay.innerHTML = ''; };
+    document.getElementById('close-edit-gal').addEventListener('click', close);
+    document.getElementById('cancel-edit-gal').addEventListener('click', close);
+    document.getElementById('save-edit-gal').addEventListener('click', async () => {
+      const name = document.getElementById('eg-name').value.trim();
+      if (!name) {
+        showToast('Validation Error', 'Galaxy name is required.', 'error');
+        return;
+      }
+      try {
+        await api(`/api/galaxies/${galaxy.id}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            name,
+            category: document.getElementById('eg-cat').value.trim(),
+            description: document.getElementById('eg-desc').value.trim(),
+            grade_eligibility: document.getElementById('eg-grades').value.trim(),
+            meeting_info: document.getElementById('eg-meet').value.trim(),
+          }),
+        });
+        overlay.innerHTML = '';
+        await refreshUniverseData();
+        if (onSaved) onSaved();
+        showToast('Galaxy Updated', `Saved changes to "${name}".`, 'success');
+      } catch (err) {
+        showToast('Error', err.message, 'error');
+      }
+    });
   }
 
   function triggerSupernovaCeremony(star) {
@@ -1418,7 +1609,7 @@
                 </div>
               </div>
               <div style="font-family:var(--font-heading); font-weight:600; font-size:14.5px;">${escapeHtml(g.name)}</div>
-              <div style="font-size:11.5px; color:var(--text-secondary); margin-top:4px;">Galaxy Head: ${escapeHtml(g.teacher_name || 'Mentor')}</div>
+              <div style="font-size:11.5px; color:var(--text-secondary); margin-top:4px;">Galaxy Head: ${escapeHtml(g.teacher_name || 'Unassigned')}</div>
             </div>
           `;
             })
@@ -2400,7 +2591,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-radius:8px; background:rgba(2,4,10,0.55); border:1px solid var(--border-subtle);">
                   <div>
                     <div style="font-family:var(--font-heading); font-weight:500; color:var(--text-primary);">${escapeHtml(g.name)}</div>
-                    <div style="font-size:11.5px; color:var(--text-secondary);">Mentor: ${escapeHtml(g.teacher_name || 'Mentor')} · ${g.star_count} stars</div>
+                    <div style="font-size:11.5px; color:var(--text-secondary);">Galaxy Head: ${escapeHtml(g.teacher_name || 'Unassigned')} · ${g.star_count} stars</div>
                   </div>
                   ${
                     u.role === 'teacher' || u.role === 'admin'
@@ -2506,12 +2697,10 @@
         <div class="page-wrap">
           <div class="cosmic-card" style="text-align:center; padding:48px;">
             <h2 style="font-size:22px; margin-bottom:10px;">Galaxy Mentor Access Required</h2>
-            <p style="color:var(--text-secondary); margin-bottom:20px;">Students cannot approve missions, create galaxies, or build constellations. Switch to a Teacher account to access Mentor controls.</p>
-            <button class="btn btn-primary" id="switch-to-teacher-btn">Switch to Dr. Aris Thorne (Teacher)</button>
+            <p style="color:var(--text-secondary); margin-bottom:20px;">Students cannot approve missions, create galaxies, or build constellations. Sign in with a Teacher account to access Mentor controls.</p>
           </div>
         </div>
       `;
-      document.getElementById('switch-to-teacher-btn').addEventListener('click', () => switchAccount('usr-tch-1'));
       return;
     }
 
@@ -2794,9 +2983,13 @@
                 </div>
                 <div style="font-family:var(--font-heading); font-size:15.5px; font-weight:600; margin:4px 0;">${escapeHtml(g.name)}</div>
                 <div style="font-size:12.5px; color:var(--text-secondary); margin-bottom:8px;">${escapeHtml(g.description)}</div>
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--text-muted);">
-                  <span>Mentor: ${escapeHtml(g.teacher_name || 'Mentor')}</span>
-                  <button class="btn btn-cyan btn-sm" data-fly-gal="${g.id}">Open on Map</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; font-size:11.5px; color:var(--text-muted);">
+                  <span>Galaxy Head: ${escapeHtml(g.teacher_name || 'Unassigned')}</span>
+                  <div style="display:flex; gap:6px;">
+                    <button class="btn btn-cyan btn-sm" data-fly-gal="${g.id}">Open on Map</button>
+                    ${(state.user.role === 'admin' || !!state.user.full_access || g.teacher_id === state.user.id) ? `<button class="btn btn-ghost btn-sm" data-edit-gal="${g.id}">Edit</button>` : ''}
+                    ${(state.user.role === 'admin' || !!state.user.full_access) ? `<button class="btn btn-danger btn-sm" data-del-gal="${g.id}">Delete</button>` : ''}
+                  </div>
                 </div>
               </div>
             `
@@ -2849,6 +3042,29 @@
     container.querySelectorAll('[data-fly-gal]').forEach((btn) => {
       btn.addEventListener('click', () => {
         navigate('/cosmic-map', `galaxy=${btn.getAttribute('data-fly-gal')}`);
+      });
+    });
+
+    container.querySelectorAll('[data-edit-gal]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const g = state.universe.galaxies.find((x) => x.id === btn.getAttribute('data-edit-gal'));
+        if (g) openEditGalaxyModal(g, () => renderTeacherGalaxyStudio(container));
+      });
+    });
+
+    container.querySelectorAll('[data-del-gal]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const gId = btn.getAttribute('data-del-gal');
+        const g = state.universe.galaxies.find((x) => x.id === gId);
+        if (!window.confirm(`Delete galaxy "${g ? g.name : gId}" and all its stars? This cannot be undone.`)) return;
+        try {
+          await api(`/api/galaxies/${gId}`, { method: 'DELETE' });
+          await refreshUniverseData();
+          renderTeacherGalaxyStudio(container);
+          showToast('Galaxy Deleted', `Removed "${g ? g.name : gId}".`, 'info');
+        } catch (err) {
+          showToast('Error', err.message, 'error');
+        }
       });
     });
   }
@@ -3300,7 +3516,7 @@
         <div class="page-wrap">
           <div class="cosmic-card" style="text-align:center; padding:48px;">
             <h2 style="font-size:22px; margin-bottom:10px;">Administrator Access Required</h2>
-            <p style="color:var(--text-secondary); margin-bottom:20px;">Switch to Commander Siddharth Nair (Admin) in the top bar to access Universe Administration.</p>
+            <p style="color:var(--text-secondary); margin-bottom:20px;">Sign in as Swetha (Admin) to access Universe Administration.</p>
             <button class="btn btn-gold" id="switch-to-admin-btn">Switch to Administrator</button>
           </div>
         </div>
@@ -3479,6 +3695,7 @@
                   <td><strong>${escapeHtml(g.name)}</strong></td>
                   <td>
                     <select class="form-select" data-head-gal="${g.id}" style="max-width:260px;">
+                      <option value="" ${!g.teacher_id ? 'selected' : ''}>Unassigned</option>
                       ${(state.adminData.teachers || [])
                         .map(
                           (tch) => `<option value="${tch.id}" ${g.teacher_id === tch.id ? 'selected' : ''}>${escapeHtml(tch.name)}</option>`
@@ -3503,8 +3720,7 @@
       btn.addEventListener('click', async () => {
         const gId = btn.getAttribute('data-save-head');
         const sel = container.querySelector(`[data-head-gal="${gId}"]`);
-        const teacher_id = sel ? sel.value : null;
-        if (!teacher_id) return;
+        const teacher_id = sel ? (sel.value || null) : null;
         try {
           await api(`/api/galaxies/${gId}`, {
             method: 'PUT',
@@ -3595,7 +3811,10 @@
                     (t) => `
                   <tr>
                     <td>
-                      <div style="font-weight:500;">${escapeHtml(t.name)}</div>
+                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <span style="font-weight:500;">${escapeHtml(t.name)}</span>
+                        ${t.full_access ? `<span class="badge badge-supernova">Full Access</span>` : ''}
+                      </div>
                       <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${escapeHtml(t.teacher_code || 'TCH')} · ${escapeHtml(t.email)}</div>
                     </td>
                     <td>
@@ -3608,7 +3827,10 @@
                       </span>
                     </td>
                     <td>
-                      <div style="display:flex; gap:6px;">
+                      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="btn ${t.full_access ? 'btn-gold' : 'btn-ghost'} btn-sm" data-toggle-full-access="${t.id}" data-cur-fa="${t.full_access ? '1' : '0'}">
+                          ${t.full_access ? 'Revoke Full Access' : 'Full Access'}
+                        </button>
                         <button class="btn btn-ghost btn-sm" data-toggle-user="${t.id}" data-cur-status="${t.account_status}">
                           ${t.account_status === 'active' ? 'Deactivate' : 'Activate'}
                         </button>
@@ -3653,6 +3875,24 @@
       } catch (err) {
         showToast('Error', err.message, 'error');
       }
+    });
+
+    container.querySelectorAll('[data-toggle-full-access]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const uId = btn.getAttribute('data-toggle-full-access');
+        const nextFa = btn.getAttribute('data-cur-fa') === '1' ? 0 : 1;
+        try {
+          await api(`/api/users/${uId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ full_access: nextFa }),
+          });
+          await refreshUniverseData();
+          renderAdminTeachers(container);
+          showToast('Permissions Updated', nextFa ? 'Teacher granted Full Access across all galaxies and stars.' : 'Teacher Full Access revoked.', 'gold');
+        } catch (err) {
+          showToast('Error', err.message, 'error');
+        }
+      });
     });
 
     bindUserStatusButtons(container, () => renderAdminTeachers(container));
@@ -4131,7 +4371,14 @@
         }
         renderShell();
         overlay.innerHTML = "";
-        const launchTour = () => setTimeout(() => startInteractiveTutorial(), 180);
+        const seenKey = 'omniverse_tutorial_seen_' + data.user.id;
+        const shouldShowTutorial = !!data.isFirstLogin && localStorage.getItem(seenKey) !== '1';
+        localStorage.setItem(seenKey, '1');
+        const launchTour = () => {
+          if (shouldShowTutorial) {
+            setTimeout(() => startInteractiveTutorial(), 180);
+          }
+        };
         if (window.playOmniverseIntro) {
           window.playOmniverseIntro(launchTour);
         } else {

@@ -33,7 +33,7 @@ function getSeedData() {
   const users = [
     {
       id: 'usr-admin-1',
-      name: 'Commander Siddharth Nair',
+      name: 'Swetha',
       email: 'admin@raksomniverse.edu',
       password_hash: pwd,
       role: 'admin',
@@ -41,107 +41,11 @@ function getSeedData() {
       department: 'Universe Directorate & Innovation Office',
       grade: null,
       section: null,
-      bio: 'Chief Universe Administrator overseeing the Raks Omniverse school ecosystem, galaxy charters, and academic telemetry.',
+      bio: 'Administrator overseeing the Raks Omniverse school ecosystem, galaxy charters, and academic telemetry.',
       avatar_color: '#FFD477',
       account_status: 'active',
       is_sample: 1,
       created_at: '2026-09-01T08:00:00Z',
-    },
-    {
-      id: 'usr-tch-1',
-      name: 'Dr. Aris Thorne',
-      email: 'aris.thorne@raksomniverse.edu',
-      password_hash: pwd,
-      role: 'teacher',
-      teacher_code: 'TCH-AI-101',
-      department: 'Artificial Intelligence & Computational Sciences',
-      grade: null,
-      section: null,
-      bio: 'Lead Galaxy Mentor for Artificial Intelligence & Machine Learning research.',
-      avatar_color: '#8855FF',
-      account_status: 'active',
-      is_sample: 1,
-      created_at: '2026-09-01T08:01:00Z',
-    },
-    {
-      id: 'usr-tch-2',
-      name: 'Prof. Elena Vance',
-      email: 'elena.vance@raksomniverse.edu',
-      password_hash: pwd,
-      role: 'teacher',
-      teacher_code: 'TCH-ROB-102',
-      department: 'Mechatronics & Autonomous Robotics',
-      grade: null,
-      section: null,
-      bio: 'Mentor of the Robotics Galaxy, guiding explorers in cybernetics, kinematics, and embedded systems.',
-      avatar_color: '#48DFFF',
-      account_status: 'active',
-      is_sample: 1,
-      created_at: '2026-09-01T08:02:00Z',
-    },
-    {
-      id: 'usr-tch-3',
-      name: 'Ms. Kavya Menon',
-      email: 'kavya.menon@raksomniverse.edu',
-      password_hash: pwd,
-      role: 'teacher',
-      teacher_code: 'TCH-LIT-103',
-      department: 'Humanities, Speculative Fiction & Poetics',
-      grade: null,
-      section: null,
-      bio: 'Architect of the Literature Galaxy, nurturing world-building, rhetoric, and philosophical essays.',
-      avatar_color: '#FF8ECF',
-      account_status: 'active',
-      is_sample: 1,
-      created_at: '2026-09-01T08:03:00Z',
-    },
-    {
-      id: 'usr-tch-4',
-      name: 'Dr. Vikramaditya Rao',
-      email: 'vikram.rao@raksomniverse.edu',
-      password_hash: pwd,
-      role: 'teacher',
-      teacher_code: 'TCH-ENV-104',
-      department: 'Earth Systems & CleanTech Engineering',
-      grade: null,
-      section: null,
-      bio: 'Mentor for the Environmental Innovation Galaxy, focusing on hydrological sensors and clean energy.',
-      avatar_color: '#34D399',
-      account_status: 'active',
-      is_sample: 1,
-      created_at: '2026-09-01T08:04:00Z',
-    },
-    {
-      id: 'usr-tch-5',
-      name: 'Mr. Rohan Deshmukh',
-      email: 'rohan.deshmukh@raksomniverse.edu',
-      password_hash: pwd,
-      role: 'teacher',
-      teacher_code: 'TCH-ENT-105',
-      department: 'Venture Design, FinTech & Economics',
-      grade: null,
-      section: null,
-      bio: 'Mentor of the Entrepreneurship Galaxy, empowering student founders and social impact ventures.',
-      avatar_color: '#FFD477',
-      account_status: 'active',
-      is_sample: 1,
-      created_at: '2026-09-01T08:05:00Z',
-    },
-    {
-      id: 'usr-tch-6',
-      name: 'Dr. Meera Krishnan',
-      email: 'meera.krishnan@raksomniverse.edu',
-      password_hash: pwd,
-      role: 'teacher',
-      teacher_code: 'TCH-AST-106',
-      department: 'Astrophysics & Observational Cosmology',
-      grade: null,
-      section: null,
-      bio: 'Director of the Raks Observatory and Mentor of the Astronomy Galaxy.',
-      avatar_color: '#91DFFF',
-      account_status: 'active',
-      is_sample: 1,
-      created_at: '2026-09-01T08:06:00Z',
     },
   ];
 
@@ -156,7 +60,7 @@ function getSeedData() {
       grade_eligibility: 'Grades 9 - 12',
       membership_rules: 'Membership approval required from Galaxy Head before contributing missions.',
       meeting_info: 'Tuesdays & Thursdays, 15:45 IST • CSci Core Lab 302',
-      teacher_id: 'usr-tch-1',
+      teacher_id: null,
       accent_color: '#8855FF',
       secondary_color: '#B56BFF',
       visual_type: 'spiral',
@@ -178,7 +82,7 @@ function getSeedData() {
       grade_eligibility: 'Grades 8 - 12',
       membership_rules: 'Safety briefing and Galaxy Head approval required.',
       meeting_info: 'Wednesdays & Fridays, 15:30 IST • Physics Hangar B',
-      teacher_id: 'usr-tch-2',
+      teacher_id: null,
       accent_color: '#48DFFF',
       secondary_color: '#91DFFF',
       visual_type: 'orbital',
@@ -200,7 +104,7 @@ function getSeedData() {
       grade_eligibility: 'Grades 6 - 12',
       membership_rules: 'Request membership from the Galaxy Head to contribute.',
       meeting_info: 'Mondays, 15:30 IST • Starlight Amphitheatre',
-      teacher_id: 'usr-tch-3',
+      teacher_id: null,
       accent_color: '#FF8ECF',
       secondary_color: '#B56BFF',
       visual_type: 'nebula',
@@ -222,7 +126,7 @@ function getSeedData() {
       grade_eligibility: 'Grades 7 - 12',
       membership_rules: 'Fieldwork participation and Galaxy Head approval required.',
       meeting_info: 'Thursdays, 16:00 IST • Bio Lab & Eco-Deck',
-      teacher_id: 'usr-tch-4',
+      teacher_id: null,
       accent_color: '#34D399',
       secondary_color: '#48DFFF',
       visual_type: 'cluster',
@@ -244,7 +148,7 @@ function getSeedData() {
       grade_eligibility: 'Grades 9 - 12',
       membership_rules: 'Request membership from the Galaxy Head to contribute.',
       meeting_info: 'Fridays, 16:00 IST • Euler Studio 104',
-      teacher_id: 'usr-tch-5',
+      teacher_id: null,
       accent_color: '#FFD477',
       secondary_color: '#FF8ECF',
       visual_type: 'spiral',
@@ -266,7 +170,7 @@ function getSeedData() {
       grade_eligibility: 'Grades 8 - 12',
       membership_rules: 'Lab coat, safety briefing, and Galaxy Head approval required.',
       meeting_info: 'Saturdays, 10:30 IST • Chemistry Synthesis Lab',
-      teacher_id: 'usr-tch-6',
+      teacher_id: null,
       accent_color: '#91DFFF',
       secondary_color: '#625CFF',
       visual_type: 'orbital',
@@ -284,7 +188,7 @@ function getSeedData() {
 
   const approvedProjects = [
     {
-      mission_id: 'msn-seed-1', star_id: 'str-seed-1', galaxy_id: 'gal-ai', student_id: 'usr-tch-1', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-1', star_id: 'str-seed-1', galaxy_id: 'gal-ai', student_id: 'usr-admin-1', explorer_name: 'Aarav Mehta', explorer_grade: 'Grade 11', reviewer_id: 'usr-admin-1',
       title: 'Neural Edge Vision', tagline: 'Lightweight CNN for real-time campus recycling sortation.',
       category: 'Computer Science', description: 'Quantized MobileNetV3 model running on edge devices to classify recyclables in real time.',
       objectives: 'Achieve >92% accuracy under 30ms inference latency.', outcomes: '94.2% validation accuracy on 4,000 test frames.',
@@ -293,7 +197,7 @@ function getSeedData() {
       pos_x: -24, pos_y: 16, pos_z: 8, star_color: '#8855FF'
     },
     {
-      mission_id: 'msn-seed-2', star_id: 'str-seed-2', galaxy_id: 'gal-ai', student_id: 'usr-tch-1', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-2', star_id: 'str-seed-2', galaxy_id: 'gal-ai', student_id: 'usr-admin-1', explorer_name: 'Diya Nair', explorer_grade: 'Grade 12', reviewer_id: 'usr-admin-1',
       title: 'Distributed Graph Solver', tagline: 'Parallel shortest-path visualizer for campus transit.',
       category: 'Computer Science', description: 'Interactive WebWorker A* and Dijkstra solver benchmarking large-scale spatial graphs.',
       objectives: 'Compare heuristic pruning across 50k nodes.', outcomes: '3.8x speedup using WebWorkers.',
@@ -302,7 +206,7 @@ function getSeedData() {
       pos_x: 28, pos_y: -14, pos_z: -10, star_color: '#B56BFF'
     },
     {
-      mission_id: 'msn-seed-3', star_id: 'str-seed-3', galaxy_id: 'gal-robotics', student_id: 'usr-tch-2', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-3', star_id: 'str-seed-3', galaxy_id: 'gal-robotics', student_id: 'usr-admin-1', explorer_name: 'Kabir Sharma', explorer_grade: 'Grade 10', reviewer_id: 'usr-admin-1',
       title: 'Harmonic Pendulum Rig', tagline: 'Optical encoder rig for damped oscillation telemetry.',
       category: 'Physics', description: 'High-resolution rotary encoder capturing phase-space trajectories of coupled pendulums.',
       objectives: 'Measure damping coefficient and energy transfer.', outcomes: 'Matched theoretical ODEs within 1.4%.',
@@ -311,7 +215,7 @@ function getSeedData() {
       pos_x: -22, pos_y: -18, pos_z: 12, star_color: '#48DFFF'
     },
     {
-      mission_id: 'msn-seed-4', star_id: 'str-seed-4', galaxy_id: 'gal-robotics', student_id: 'usr-tch-2', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-4', star_id: 'str-seed-4', galaxy_id: 'gal-robotics', student_id: 'usr-admin-1', explorer_name: 'Riya Iyer', explorer_grade: 'Grade 12', reviewer_id: 'usr-admin-1',
       title: 'Laser Interferometer Bench', tagline: 'Michelson interferometer for sub-micron vibration sensing.',
       category: 'Physics', description: 'Desktop optical bench using photodiode fringe counting to detect micro-displacements.',
       objectives: 'Resolve sub-wavelength mirror shifts.', outcomes: 'Detected 320nm acoustic vibrations.',
@@ -320,7 +224,7 @@ function getSeedData() {
       pos_x: 26, pos_y: 20, pos_z: -8, star_color: '#91DFFF'
     },
     {
-      mission_id: 'msn-seed-5', star_id: 'str-seed-5', galaxy_id: 'gal-literature', student_id: 'usr-tch-3', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-5', star_id: 'str-seed-5', galaxy_id: 'gal-literature', student_id: 'usr-admin-1', explorer_name: 'Ishaan Verma', explorer_grade: 'Grade 9', reviewer_id: 'usr-admin-1',
       title: 'Solarpunk Anthology Vol. I', tagline: 'Speculative short stories on regenerative futures.',
       category: 'English', description: 'Curated collection of speculative fiction exploring ecological resilience and civic technology.',
       objectives: 'Combine world-building with literary craft.', outcomes: 'Published 12-chapter digital zine.',
@@ -329,7 +233,7 @@ function getSeedData() {
       pos_x: -26, pos_y: 14, pos_z: -12, star_color: '#FF8ECF'
     },
     {
-      mission_id: 'msn-seed-6', star_id: 'str-seed-6', galaxy_id: 'gal-literature', student_id: 'usr-tch-3', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-6', star_id: 'str-seed-6', galaxy_id: 'gal-literature', student_id: 'usr-admin-1', explorer_name: 'Tara Menon', explorer_grade: 'Grade 11', reviewer_id: 'usr-admin-1',
       title: 'Rhetoric & Civic Debate Atlas', tagline: 'Annotated archive of classical and modern speeches.',
       category: 'English', description: 'Interactive rhetorical breakdown of ethos, pathos, and logos in landmark public addresses.',
       objectives: 'Map persuasive structures for debate teams.', outcomes: '25 annotated speeches indexed.',
@@ -338,7 +242,7 @@ function getSeedData() {
       pos_x: 22, pos_y: -16, pos_z: 10, star_color: '#B56BFF'
     },
     {
-      mission_id: 'msn-seed-7', star_id: 'str-seed-7', galaxy_id: 'gal-environment', student_id: 'usr-tch-4', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-7', star_id: 'str-seed-7', galaxy_id: 'gal-environment', student_id: 'usr-admin-1', explorer_name: 'Vihaan Kulkarni', explorer_grade: 'Grade 10', reviewer_id: 'usr-admin-1',
       title: 'Hydroponic Microbiome Assay', tagline: 'Root-zone bacterial diversity in vertical farms.',
       category: 'Biology', description: 'Comparative study of beneficial rhizobacteria and dissolved oxygen on leafy green yield.',
       objectives: 'Optimize nutrient uptake without synthetic boosters.', outcomes: '22% faster biomass growth.',
@@ -347,7 +251,7 @@ function getSeedData() {
       pos_x: -20, pos_y: -22, pos_z: 8, star_color: '#34D399'
     },
     {
-      mission_id: 'msn-seed-8', star_id: 'str-seed-8', galaxy_id: 'gal-environment', student_id: 'usr-tch-4', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-8', star_id: 'str-seed-8', galaxy_id: 'gal-environment', student_id: 'usr-admin-1', explorer_name: 'Neha Balasubramanian', explorer_grade: 'Grade 11', reviewer_id: 'usr-admin-1',
       title: 'Pollinator Acoustic Monitor', tagline: 'Wingbeat frequency classifier for campus flora.',
       category: 'Biology', description: 'Low-power acoustic sensor logging bee and hoverfly visitation patterns across seasons.',
       objectives: 'Track native pollinator biodiversity.', outcomes: 'Identified 6 distinct pollinator species.',
@@ -356,7 +260,7 @@ function getSeedData() {
       pos_x: 24, pos_y: 18, pos_z: -12, star_color: '#48DFFF'
     },
     {
-      mission_id: 'msn-seed-9', star_id: 'str-seed-9', galaxy_id: 'gal-entrepreneurship', student_id: 'usr-tch-5', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-9', star_id: 'str-seed-9', galaxy_id: 'gal-entrepreneurship', student_id: 'usr-admin-1', explorer_name: 'Aditya Rao', explorer_grade: 'Grade 11', reviewer_id: 'usr-admin-1',
       title: 'Elliptic Curve Sandbox', tagline: 'Visualizing modular arithmetic and key exchange.',
       category: 'Mathematics', description: 'Interactive geometric plotter for finite-field elliptic curves and Diffie-Hellman steps.',
       objectives: 'Demystify modern public-key cryptography.', outcomes: 'Used in Grade 11 math seminar.',
@@ -365,7 +269,7 @@ function getSeedData() {
       pos_x: -25, pos_y: 15, pos_z: 10, star_color: '#FFD477'
     },
     {
-      mission_id: 'msn-seed-10', star_id: 'str-seed-10', galaxy_id: 'gal-entrepreneurship', student_id: 'usr-tch-5', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-10', star_id: 'str-seed-10', galaxy_id: 'gal-entrepreneurship', student_id: 'usr-admin-1', explorer_name: 'Saanvi Joshi', explorer_grade: 'Grade 12', reviewer_id: 'usr-admin-1',
       title: 'Markov Campus Queue Model', tagline: 'Stochastic simulation of dining hall flow.',
       category: 'Mathematics', description: 'Continuous-time Markov chain model predicting peak lunch wait times and optimal serving lanes.',
       objectives: 'Minimize queue variance during peak breaks.', outcomes: 'Reduced simulated wait by 31%.',
@@ -374,7 +278,7 @@ function getSeedData() {
       pos_x: 26, pos_y: -15, pos_z: -8, star_color: '#FF8ECF'
     },
     {
-      mission_id: 'msn-seed-11', star_id: 'str-seed-11', galaxy_id: 'gal-astronomy', student_id: 'usr-tch-6', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-11', star_id: 'str-seed-11', galaxy_id: 'gal-astronomy', student_id: 'usr-admin-1', explorer_name: 'Rohan Karthik', explorer_grade: 'Grade 10', reviewer_id: 'usr-admin-1',
       title: 'Green Polymer Biofilm', tagline: 'Starch-chitosan biodegradable packaging film.',
       category: 'Chemistry', description: 'Tensile and moisture-barrier testing of glycerol-plasticized biopolymer films.',
       objectives: 'Replace single-use lab wrap with compostable film.', outcomes: 'Degraded 88% in 21-day soil test.',
@@ -383,7 +287,7 @@ function getSeedData() {
       pos_x: -22, pos_y: -16, pos_z: 12, star_color: '#91DFFF'
     },
     {
-      mission_id: 'msn-seed-12', star_id: 'str-seed-12', galaxy_id: 'gal-astronomy', student_id: 'usr-tch-6', reviewer_id: 'usr-admin-1',
+      mission_id: 'msn-seed-12', star_id: 'str-seed-12', galaxy_id: 'gal-astronomy', student_id: 'usr-admin-1', explorer_name: 'Meera Natarajan', explorer_grade: 'Grade 12', reviewer_id: 'usr-admin-1',
       title: 'UV-Vis Reaction Kinetics', tagline: 'Real-time absorbance tracking of dye degradation.',
       category: 'Chemistry', description: 'Spectrophotometric rate-law determination for photocatalytic breakdown under UV-A.',
       objectives: 'Determine reaction order and activation energy.', outcomes: 'Confirmed pseudo-first-order kinetics.',
@@ -489,7 +393,7 @@ function getSeedData() {
   ];
 
   const logs = [
-    { id: 'log-1', actor_id: 'usr-admin-1', actor_name: 'Commander Siddharth Nair', actor_role: 'admin', action_type: 'UNIVERSE_INIT', description: 'Initialized Raks Omniverse core sectors and chartered 6 Galaxies', entity_type: 'system', entity_id: 'omniverse', timestamp: '2026-09-01T08:00:00Z' },
+    { id: 'log-1', actor_id: 'usr-admin-1', actor_name: 'Swetha', actor_role: 'admin', action_type: 'UNIVERSE_INIT', description: 'Initialized Raks Omniverse core sectors and chartered 6 Galaxies', entity_type: 'system', entity_id: 'omniverse', timestamp: '2026-09-01T08:00:00Z' },
   ];
 
   return {
@@ -562,6 +466,8 @@ function initSqlite() {
       avatar_color TEXT DEFAULT '#8855FF',
       account_status TEXT NOT NULL DEFAULT 'active' CHECK(account_status IN ('active', 'deactivated', 'suspended')),
       created_by TEXT,
+      full_access INTEGER DEFAULT 0,
+      tutorial_seen INTEGER DEFAULT 0,
       is_sample INTEGER DEFAULT 0,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
@@ -581,7 +487,7 @@ function initSqlite() {
       grade_eligibility TEXT DEFAULT 'Grades 8 - 12',
       membership_rules TEXT DEFAULT 'Open to all curious explorers with mentor approval',
       meeting_info TEXT DEFAULT 'Thursdays, 15:30 - 17:00 IST • Innovation Lab',
-      teacher_id TEXT NOT NULL,
+      teacher_id TEXT,
       accent_color TEXT NOT NULL DEFAULT '#8855FF',
       secondary_color TEXT NOT NULL DEFAULT '#48DFFF',
       visual_type TEXT NOT NULL DEFAULT 'spiral' CHECK(visual_type IN ('spiral', 'nebula', 'orbital', 'cluster')),
@@ -759,15 +665,15 @@ function initSqlite() {
     for (const m of seed.memberships) insMem.run(m.student_id, m.galaxy_id, m.membership_status);
 
     const insMsn = sqliteDb.prepare(`
-      INSERT INTO missions (id, student_id, galaxy_id, title, tagline, category, description, objectives, outcomes, github_url, live_url, video_url, documentation, attachments_json, status, submission_date, reviewer_id, feedback, reviewed_at, is_sample)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Approved', ?, ?, ?, ?, 1)
+      INSERT INTO missions (id, student_id, explorer_name, explorer_grade, galaxy_id, title, tagline, category, description, objectives, outcomes, github_url, live_url, video_url, documentation, attachments_json, status, submission_date, reviewer_id, feedback, reviewed_at, is_sample)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Approved', ?, ?, ?, ?, 1)
     `);
     const insStr = sqliteDb.prepare(`
       INSERT INTO stars (id, mission_id, galaxy_id, student_id, title, stellar_energy, star_classification, pos_x, pos_y, pos_z, star_color, approval_date, is_sample)
       VALUES (?, ?, ?, ?, ?, 0, 'Young Star', ?, ?, ?, ?, ?, 1)
     `);
     for (const p of seed.approvedProjects) {
-      insMsn.run(p.mission_id, p.student_id, p.galaxy_id, p.title, p.tagline, p.category, p.description, p.objectives, p.outcomes, p.github_url, p.live_url, p.video_url, p.documentation, JSON.stringify(p.attachments), p.submission_date, p.reviewer_id, p.feedback, p.approval_date);
+      insMsn.run(p.mission_id, p.student_id, p.explorer_name || null, p.explorer_grade || null, p.galaxy_id, p.title, p.tagline, p.category, p.description, p.objectives, p.outcomes, p.github_url, p.live_url, p.video_url, p.documentation, JSON.stringify(p.attachments), p.submission_date, p.reviewer_id, p.feedback, p.approval_date);
       insStr.run(p.star_id, p.mission_id, p.galaxy_id, p.student_id, p.title, p.pos_x, p.pos_y, p.pos_z, p.star_color, p.approval_date);
     }
 
@@ -805,6 +711,8 @@ function initSqlite() {
     }
   }
   try { sqliteDb.exec('ALTER TABLE users ADD COLUMN created_by TEXT'); } catch {}
+  try { sqliteDb.exec('ALTER TABLE users ADD COLUMN full_access INTEGER DEFAULT 0'); } catch {}
+  try { sqliteDb.exec('ALTER TABLE users ADD COLUMN tutorial_seen INTEGER DEFAULT 0'); } catch {}
   try { sqliteDb.exec('ALTER TABLE missions ADD COLUMN explorer_name TEXT'); } catch {}
   try { sqliteDb.exec('ALTER TABLE missions ADD COLUMN explorer_grade TEXT'); } catch {}
   return sqliteDb;
@@ -885,6 +793,8 @@ async function initMongo() {
       missionDocs.push({
         id: p.mission_id,
         student_id: p.student_id,
+        explorer_name: p.explorer_name || null,
+        explorer_grade: p.explorer_grade || null,
         galaxy_id: p.galaxy_id,
         title: p.title,
         tagline: p.tagline,
@@ -958,6 +868,18 @@ async function initMongo() {
         { $set: { name: g.name, code: g.code, category: g.category, description: g.description, membership_rules: g.membership_rules, pos_x: g.pos_x, pos_y: g.pos_y, pos_z: g.pos_z } }
       );
     }
+    const sampleTeachers = await mongoDb.collection('users').find({ role: 'teacher', is_sample: 1 }).toArray();
+    const sampleTeacherIds = sampleTeachers.map((u) => u.id);
+    await Promise.all([
+      mongoDb.collection('users').updateOne({ id: 'usr-admin-1' }, { $set: { name: 'Swetha' } }),
+      mongoDb.collection('activity_logs').updateMany({ actor_id: 'usr-admin-1' }, { $set: { actor_name: 'Swetha' } }),
+      sampleTeacherIds.length ? mongoDb.collection('users').deleteMany({ id: { $in: sampleTeacherIds } }) : Promise.resolve(),
+      sampleTeacherIds.length ? mongoDb.collection('sessions').deleteMany({ user_id: { $in: sampleTeacherIds } }) : Promise.resolve(),
+      sampleTeacherIds.length ? mongoDb.collection('stars').updateMany({ student_id: { $in: sampleTeacherIds } }, { $set: { student_id: 'usr-admin-1' } }) : Promise.resolve(),
+      sampleTeacherIds.length ? mongoDb.collection('missions').updateMany({ student_id: { $in: sampleTeacherIds } }, { $set: { student_id: 'usr-admin-1' } }) : Promise.resolve(),
+      mongoDb.collection('galaxies').updateMany({ id: { $ne: 'gal-astronomy' } }, { $set: { teacher_id: null } }),
+      sampleTeacherIds.length ? mongoDb.collection('galaxies').updateMany({ id: 'gal-astronomy', teacher_id: { $in: sampleTeacherIds } }, { $set: { teacher_id: null } }) : Promise.resolve(),
+    ]);
     // Remove previously seeded sample student accounts & sample constellations
     const sampleStudents = await mongoDb.collection('users').find({ role: 'student', is_sample: 1 }).toArray();
     if (sampleStudents.length > 0) {
@@ -1003,7 +925,8 @@ async function initMongo() {
     if (starCount === 0 && seed.approvedProjects.length > 0) {
       const t = await getThresholdsMongo();
       const mDocs = seed.approvedProjects.map((p) => ({
-        id: p.mission_id, student_id: p.student_id, galaxy_id: p.galaxy_id, title: p.title, tagline: p.tagline,
+        id: p.mission_id, student_id: p.student_id, explorer_name: p.explorer_name || null, explorer_grade: p.explorer_grade || null,
+        galaxy_id: p.galaxy_id, title: p.title, tagline: p.tagline,
         category: p.category, description: p.description, objectives: p.objectives, outcomes: p.outcomes,
         github_url: p.github_url, live_url: p.live_url, video_url: p.video_url, documentation: p.documentation,
         attachments_json: JSON.stringify(p.attachments), status: 'Approved', flagged: 0, flag_reason: null,
@@ -1018,6 +941,15 @@ async function initMongo() {
       }));
       await mongoDb.collection('missions').insertMany(mDocs);
       await mongoDb.collection('stars').insertMany(sDocs);
+    } else if (seed.approvedProjects.length > 0) {
+      for (const p of seed.approvedProjects) {
+        if (p.explorer_name) {
+          await mongoDb.collection('missions').updateOne(
+            { id: p.mission_id },
+            { $set: { explorer_name: p.explorer_name, explorer_grade: p.explorer_grade || null } }
+          );
+        }
+      }
     }
   }
 }
@@ -1053,7 +985,7 @@ async function init() {
   return initPromise;
 }
 
-const SAFE_USER_FIELDS = ['id', 'name', 'email', 'role', 'teacher_code', 'department', 'grade', 'section', 'bio', 'avatar_color', 'account_status', 'created_at'];
+const SAFE_USER_FIELDS = ['id', 'name', 'email', 'role', 'teacher_code', 'department', 'grade', 'section', 'bio', 'avatar_color', 'account_status', 'full_access', 'tutorial_seen', 'created_at'];
 function pickSafeUser(u) {
   if (!u) return null;
   const out = {};
@@ -1110,7 +1042,7 @@ const store = {
     const session = sqliteDb.prepare('SELECT user_id FROM sessions WHERE token = ?').get(token);
     if (!session) return null;
     const user = sqliteDb.prepare(`
-      SELECT id, name, email, role, teacher_code, department, grade, section, bio, avatar_color, account_status, created_at
+      SELECT id, name, email, role, teacher_code, department, grade, section, bio, avatar_color, account_status, full_access, tutorial_seen, created_at
       FROM users WHERE id = ?
     `).get(session.user_id);
     return user && user.account_status === 'active' ? user : null;
@@ -1124,10 +1056,10 @@ const store = {
       return pickSafeUser(u);
     }
     return sqliteDb.prepare(`
-      SELECT id, name, email, role, teacher_code, department, grade, section, bio, avatar_color, account_status, created_at
+      SELECT id, name, email, role, teacher_code, department, grade, section, bio, avatar_color, account_status, full_access, tutorial_seen, created_at
       FROM users WHERE id = ? AND account_status = 'active'
     `).get(demoUserId) || sqliteDb.prepare(`
-      SELECT id, name, email, role, teacher_code, department, grade, section, bio, avatar_color, account_status, created_at
+      SELECT id, name, email, role, teacher_code, department, grade, section, bio, avatar_color, account_status, full_access, tutorial_seen, created_at
       FROM users WHERE account_status = 'active' LIMIT 1
     `).get();
   },
@@ -1174,6 +1106,16 @@ const store = {
       return mongoDb.collection('notifications').countDocuments({ recipient_id: userId, read_status: 0 });
     }
     return sqliteDb.prepare('SELECT COUNT(*) as c FROM notifications WHERE recipient_id = ? AND read_status = 0').get(userId).c;
+  },
+
+  async hasAnySession(userId) {
+    await init();
+    if (storageMode === 'mongodb') {
+      const cnt = await mongoDb.collection('sessions').countDocuments({ user_id: userId });
+      return cnt > 0;
+    }
+    const row = sqliteDb.prepare('SELECT COUNT(*) as c FROM sessions WHERE user_id = ?').get(userId);
+    return !!(row && row.c > 0);
   },
 
   async createSession(token, userId) {
@@ -1299,8 +1241,8 @@ const store = {
           try { attachments = JSON.parse(m.attachments_json || '[]'); } catch {}
           return {
             ...stripMongoId(s),
-            student_name: u.name || null,
-            student_grade: u.grade || null,
+            student_name: m.explorer_name || u.name || null,
+            student_grade: m.explorer_grade || u.grade || null,
             student_section: u.section || null,
             student_avatar_color: u.avatar_color || null,
             galaxy_name: g.name || null,
@@ -1407,7 +1349,7 @@ const store = {
     }
 
     const stars = sqliteDb.prepare(`
-      SELECT s.*, u.name as student_name, u.grade as student_grade, u.section as student_section, u.avatar_color as student_avatar_color,
+      SELECT s.*, COALESCE(m.explorer_name, u.name) as student_name, COALESCE(m.explorer_grade, u.grade) as student_grade, u.section as student_section, u.avatar_color as student_avatar_color,
         g.name as galaxy_name, g.code as galaxy_code, g.accent_color as galaxy_color,
         m.tagline, m.category, m.description, m.objectives, m.outcomes, m.github_url, m.live_url, m.video_url, m.documentation, m.attachments_json, m.submission_date, m.feedback,
         rev.name as reviewer_name
@@ -1496,7 +1438,7 @@ const store = {
     const stars = categoryFilter === 'all' || categoryFilter === 'stars'
       ? sqliteDb.prepare(`
           SELECT s.id, s.title, s.galaxy_id, s.stellar_energy, s.star_classification, s.star_color,
-            u.name as student_name, g.name as galaxy_name, m.category, m.tagline
+            COALESCE(m.explorer_name, u.name) as student_name, g.name as galaxy_name, m.category, m.tagline
           FROM stars s JOIN missions m ON s.mission_id = m.id JOIN users u ON s.student_id = u.id JOIN galaxies g ON s.galaxy_id = g.id
           WHERE LOWER(s.title) LIKE ? OR LOWER(m.description) LIKE ? OR LOWER(m.category) LIKE ? OR LOWER(u.name) LIKE ?
           ORDER BY s.stellar_energy DESC LIMIT 10
@@ -1707,12 +1649,14 @@ const store = {
 
   async updateGalaxy(galaxyId, body, isAdmin) {
     await init();
+    const hasTeacherField = isAdmin && Object.prototype.hasOwnProperty.call(body, 'teacher_id');
+    const nextTeacherId = hasTeacherField ? (body.teacher_id || null) : undefined;
     if (storageMode === 'mongodb') {
       const updates = {};
       for (const f of ['name', 'description', 'category', 'objectives', 'grade_eligibility', 'meeting_info', 'accent_color', 'visual_type', 'status']) {
-        if (body[f]) updates[f] = body[f];
+        if (body[f] !== undefined && body[f] !== '') updates[f] = body[f];
       }
-      if (isAdmin && body.teacher_id) updates.teacher_id = body.teacher_id;
+      if (hasTeacherField) updates.teacher_id = nextTeacherId;
       if (Object.keys(updates).length > 0) {
         await mongoDb.collection('galaxies').updateOne({ id: galaxyId }, { $set: updates });
       }
@@ -1723,10 +1667,33 @@ const store = {
       SET name = COALESCE(?, name), description = COALESCE(?, description), category = COALESCE(?, category),
           objectives = COALESCE(?, objectives), grade_eligibility = COALESCE(?, grade_eligibility),
           meeting_info = COALESCE(?, meeting_info), accent_color = COALESCE(?, accent_color),
-          visual_type = COALESCE(?, visual_type), status = COALESCE(?, status), teacher_id = COALESCE(?, teacher_id)
+          visual_type = COALESCE(?, visual_type), status = COALESCE(?, status)
       WHERE id = ?
-    `).run(body.name || null, body.description || null, body.category || null, body.objectives || null, body.grade_eligibility || null, body.meeting_info || null, body.accent_color || null, body.visual_type || null, body.status || null, isAdmin && body.teacher_id ? body.teacher_id : null, galaxyId);
+    `).run(body.name || null, body.description || null, body.category || null, body.objectives || null, body.grade_eligibility || null, body.meeting_info || null, body.accent_color || null, body.visual_type || null, body.status || null, galaxyId);
+    if (hasTeacherField) {
+      sqliteDb.prepare('UPDATE galaxies SET teacher_id = ? WHERE id = ?').run(nextTeacherId, galaxyId);
+    }
     return sqliteDb.prepare('SELECT * FROM galaxies WHERE id = ?').get(galaxyId);
+  },
+
+  async deleteGalaxy(galaxyId) {
+    await init();
+    if (storageMode === 'mongodb') {
+      const galStars = await mongoDb.collection('stars').find({ galaxy_id: galaxyId }).toArray();
+      const starIds = galStars.map((s) => s.id);
+      await Promise.all([
+        mongoDb.collection('galaxies').deleteOne({ id: galaxyId }),
+        mongoDb.collection('galaxy_members').deleteMany({ galaxy_id: galaxyId }),
+        mongoDb.collection('missions').deleteMany({ galaxy_id: galaxyId }),
+        mongoDb.collection('stars').deleteMany({ galaxy_id: galaxyId }),
+        mongoDb.collection('constellations').deleteMany({ galaxy_id: galaxyId }),
+        starIds.length ? mongoDb.collection('sparks').deleteMany({ star_id: { $in: starIds } }) : Promise.resolve(),
+        starIds.length ? mongoDb.collection('constellation_stars').deleteMany({ star_id: { $in: starIds } }) : Promise.resolve(),
+      ]);
+      return { deleted: true };
+    }
+    sqliteDb.prepare('DELETE FROM galaxies WHERE id = ?').run(galaxyId);
+    return { deleted: true };
   },
 
   async getMissionsForUser(currentUser) {
@@ -1931,6 +1898,68 @@ const store = {
     await init();
     if (storageMode === 'mongodb') return stripMongoId(await mongoDb.collection('stars').findOne({ id }));
     return sqliteDb.prepare('SELECT * FROM stars WHERE id = ?').get(id);
+  },
+
+  async updateStar(starId, body) {
+    await init();
+    const star = await this.getStarById(starId);
+    if (!star) return null;
+    if (storageMode === 'mongodb') {
+      const starUpdates = {};
+      if (body.title) starUpdates.title = body.title.trim();
+      if (body.star_color) starUpdates.star_color = body.star_color;
+      if (Object.keys(starUpdates).length > 0) {
+        await mongoDb.collection('stars').updateOne({ id: starId }, { $set: starUpdates });
+      }
+      const msnUpdates = {};
+      for (const f of ['title', 'tagline', 'category', 'description', 'objectives', 'outcomes', 'explorer_name', 'explorer_grade']) {
+        if (body[f] !== undefined) msnUpdates[f] = typeof body[f] === 'string' ? body[f].trim() : body[f];
+      }
+      if (Object.keys(msnUpdates).length > 0 && star.mission_id) {
+        await mongoDb.collection('missions').updateOne({ id: star.mission_id }, { $set: msnUpdates });
+      }
+      return stripMongoId(await mongoDb.collection('stars').findOne({ id: starId }));
+    }
+    sqliteDb.prepare('UPDATE stars SET title = COALESCE(?, title), star_color = COALESCE(?, star_color) WHERE id = ?')
+      .run(body.title ? body.title.trim() : null, body.star_color || null, starId);
+    if (star.mission_id) {
+      sqliteDb.prepare(`
+        UPDATE missions
+        SET title = COALESCE(?, title), tagline = COALESCE(?, tagline), category = COALESCE(?, category),
+            description = COALESCE(?, description), objectives = COALESCE(?, objectives), outcomes = COALESCE(?, outcomes),
+            explorer_name = COALESCE(?, explorer_name), explorer_grade = COALESCE(?, explorer_grade)
+        WHERE id = ?
+      `).run(
+        body.title ? body.title.trim() : null,
+        body.tagline !== undefined ? body.tagline.trim() : null,
+        body.category ? body.category.trim() : null,
+        body.description !== undefined ? body.description.trim() : null,
+        body.objectives !== undefined ? body.objectives.trim() : null,
+        body.outcomes !== undefined ? body.outcomes.trim() : null,
+        body.explorer_name !== undefined ? (body.explorer_name.trim() || null) : null,
+        body.explorer_grade !== undefined ? (body.explorer_grade.trim() || null) : null,
+        star.mission_id
+      );
+    }
+    return sqliteDb.prepare('SELECT * FROM stars WHERE id = ?').get(starId);
+  },
+
+  async deleteStar(starId) {
+    await init();
+    const star = await this.getStarById(starId);
+    if (!star) return { deleted: false };
+    if (storageMode === 'mongodb') {
+      await Promise.all([
+        mongoDb.collection('sparks').deleteMany({ star_id: starId }),
+        mongoDb.collection('constellation_stars').deleteMany({ star_id: starId }),
+        mongoDb.collection('stars').deleteOne({ id: starId }),
+        star.mission_id ? mongoDb.collection('missions').deleteOne({ id: star.mission_id }) : Promise.resolve(),
+      ]);
+      return { deleted: true };
+    }
+    sqliteDb.prepare('DELETE FROM stars WHERE id = ?').run(starId);
+    if (star.mission_id) sqliteDb.prepare('DELETE FROM missions WHERE id = ?').run(star.mission_id);
+    return { deleted: true };
   },
 
   async toggleSpark(star, currentUser) {
@@ -2142,7 +2171,7 @@ const store = {
       FROM galaxies g LEFT JOIN users u ON g.teacher_id = u.id WHERE g.status = 'active'
     `).all();
     const stars = sqliteDb.prepare(`
-      SELECT s.*, u.name as student_name, g.name as galaxy_name, m.category, m.description, m.tagline
+      SELECT s.*, COALESCE(m.explorer_name, u.name) as student_name, g.name as galaxy_name, m.category, m.description, m.tagline
       FROM stars s JOIN missions m ON s.mission_id = m.id JOIN users u ON s.student_id = u.id JOIN galaxies g ON s.galaxy_id = g.id
       ORDER BY s.stellar_energy DESC
     `).all();
@@ -2182,6 +2211,7 @@ const store = {
         .map((u) => ({
           id: u.id, name: u.name, email: u.email, role: u.role, teacher_code: u.teacher_code,
           department: u.department, avatar_color: u.avatar_color, account_status: u.account_status,
+          full_access: u.full_access ? 1 : 0,
           is_sample: u.is_sample, created_at: u.created_at,
           assigned_galaxies: galaxies.filter((g) => g.teacher_id === u.id).map((g) => g.name).join(', ') || null,
           reviews_completed: missions.filter((m) => m.reviewer_id === u.id).length,
@@ -2210,7 +2240,7 @@ const store = {
     }
 
     const teachers = sqliteDb.prepare(`
-      SELECT u.id, u.name, u.email, u.role, u.teacher_code, u.department, u.avatar_color, u.account_status, u.is_sample, u.created_at,
+      SELECT u.id, u.name, u.email, u.role, u.teacher_code, u.department, u.avatar_color, u.account_status, COALESCE(u.full_access, 0) as full_access, u.is_sample, u.created_at,
         (SELECT GROUP_CONCAT(g.name, ', ') FROM galaxies g WHERE g.teacher_id = u.id) as assigned_galaxies,
         (SELECT COUNT(*) FROM missions m WHERE m.reviewer_id = u.id) as reviews_completed
       FROM users u WHERE u.role = 'teacher' ORDER BY u.created_at DESC
@@ -2342,15 +2372,17 @@ const store = {
       for (const f of ['account_status', 'name', 'department', 'grade', 'section', 'teacher_code']) {
         if (body[f]) updates[f] = body[f];
       }
+      if (body.full_access !== undefined) updates.full_access = body.full_access ? 1 : 0;
       if (body.reset_password) updates.password_hash = hashPassword(body.reset_password);
       if (Object.keys(updates).length > 0) {
         await mongoDb.collection('users').updateOne({ id: targetId }, { $set: updates });
       }
       const u = await mongoDb.collection('users').findOne({ id: targetId });
-      return { id: u.id, name: u.name, email: u.email, role: u.role, teacher_code: u.teacher_code, department: u.department, grade: u.grade, section: u.section, account_status: u.account_status };
+      return { id: u.id, name: u.name, email: u.email, role: u.role, teacher_code: u.teacher_code, department: u.department, grade: u.grade, section: u.section, account_status: u.account_status, full_access: u.full_access ? 1 : 0 };
     }
 
     if (body.account_status) sqliteDb.prepare('UPDATE users SET account_status = ? WHERE id = ?').run(body.account_status, targetId);
+    if (body.full_access !== undefined) sqliteDb.prepare('UPDATE users SET full_access = ? WHERE id = ?').run(body.full_access ? 1 : 0, targetId);
     if (body.department || body.name || body.grade || body.section || body.teacher_code) {
       sqliteDb.prepare(`
         UPDATE users SET name = COALESCE(?, name), department = COALESCE(?, department), grade = COALESCE(?, grade),
@@ -2358,7 +2390,17 @@ const store = {
       `).run(body.name || null, body.department || null, body.grade || null, body.section || null, body.teacher_code || null, targetId);
     }
     if (body.reset_password) sqliteDb.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hashPassword(body.reset_password), targetId);
-    return sqliteDb.prepare('SELECT id, name, email, role, teacher_code, department, grade, section, account_status FROM users WHERE id = ?').get(targetId);
+    return sqliteDb.prepare('SELECT id, name, email, role, teacher_code, department, grade, section, account_status, COALESCE(full_access, 0) as full_access FROM users WHERE id = ?').get(targetId);
+  },
+
+  async markTutorialSeen(userId) {
+    await init();
+    if (storageMode === 'mongodb') {
+      await mongoDb.collection('users').updateOne({ id: userId }, { $set: { tutorial_seen: 1 } });
+      return true;
+    }
+    sqliteDb.prepare('UPDATE users SET tutorial_seen = 1 WHERE id = ?').run(userId);
+    return true;
   },
 
   async changePassword(userId, newPassword) {
