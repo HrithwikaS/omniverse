@@ -382,7 +382,7 @@
 
     const coreNav = [
       { path: '/cosmic-map', icon: ICONS.map, label: 'Cosmic Map', badge: `${state.universe.galaxies.length}` },
-      ...(u.role === 'teacher' ? [] : [{ path: '/missions', icon: ICONS.mission, label: 'Mission Control', badge: pendingCount && u.role === 'admin' ? `${pendingCount}` : null }]),
+      { path: '/missions', icon: ICONS.mission, label: 'Mission Control', badge: pendingCount && (u.role === 'admin' || u.role === 'teacher') ? `${pendingCount}` : null },
       { path: '/comets', icon: ICONS.comet, label: 'Comets', badge: `${state.universe.comets.length}` },
       { path: '/cosmo', icon: ICONS.cosmo, label: 'Cosmo', badge: null },
       { path: '/student', icon: ICONS.profile, label: 'My Profile', badge: null },
@@ -787,9 +787,7 @@
                 : ''
             }
             ${
-              state.user && state.user.role === 'teacher'
-                ? ''
-                : !state.user || state.user.role !== 'student' || g.is_member
+              !state.user || state.user.role !== 'student' || g.is_member
                 ? `<button class="btn btn-primary btn-sm" id="launch-into-galaxy-btn">Open Mission Control</button>`
                 : `<button class="btn btn-ghost btn-sm" id="launch-into-galaxy-btn" title="Members only for contribution">View Mission Control</button>`
             }
@@ -1419,11 +1417,6 @@
   // 2. MISSION CONTROL (/missions) — LAUNCH & TRACK MISSIONS + TEACHER REVIEW
   // ===========================================================================
   function renderMissionsView(root) {
-    if (state.user && state.user.role === 'teacher') {
-      state.teacherTab = 'mission-control';
-      navigate('/teacher');
-      return;
-    }
     const d = state.missionDraft;
     const galaxies = state.universe.galaxies;
     const isMentor = state.user && (state.user.role === 'teacher' || state.user.role === 'admin');
@@ -2524,7 +2517,7 @@
           </div>
           <div style="display:flex; gap:10px;">
             <button class="btn btn-ghost" id="stu-explore-map-btn">Cosmic Map</button>
-            ${u.role === 'teacher' ? '' : `<button class="btn btn-primary" id="stu-launch-msn-btn">Mission Control</button>`}
+            <button class="btn btn-primary" id="stu-launch-msn-btn">Mission Control</button>
           </div>
         </div>
 
@@ -4444,18 +4437,16 @@
       },
     ];
 
-    if (!isTeacher) {
-      steps.push({
-        route: '/missions',
-        selector: '.wizard-steps',
-        fallbackSelector: '.page-hero',
-        pad: 12,
-        radius: 14,
-        eyebrow: 'MISSIONS',
-        title: 'Mission Control',
-        body: 'Launch new student projects as Missions, attach links and files, and track pending approvals until they ignite into permanent Stars.',
-      });
-    }
+    steps.push({
+      route: '/missions',
+      selector: '.wizard-steps',
+      fallbackSelector: '.page-hero',
+      pad: 12,
+      radius: 14,
+      eyebrow: 'MISSIONS',
+      title: 'Mission Control',
+      body: 'Launch new student projects as Missions, attach links and files, and track pending approvals until they ignite into permanent Stars.',
+    });
 
     steps.push(
       {

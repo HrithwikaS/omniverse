@@ -204,13 +204,36 @@
     wmBase + "/d/db/Messier51_sRGB.jpg/960px-Messier51_sRGB.jpg",
     wmBase + "/c/c5/M101_hires_STScI-PRC2006-10a.jpg/960px-M101_hires_STScI-PRC2006-10a.jpg",
     wmBase + "/5/5e/M104_ngc4594_sombrero_galaxy_hi-res.jpg/960px-M104_ngc4594_sombrero_galaxy_hi-res.jpg",
-    wmBase + "/5/53/Hubble2005-01-barred-spiral-galaxy-NGC1300.jpg/960px-Hubble2005-01-barred-spiral-galaxy-NGC1300.jpg",
+    wmBase + "/5/52/Hubble2005-01-barred-spiral-galaxy-NGC1300.jpg/960px-Hubble2005-01-barred-spiral-galaxy-NGC1300.jpg",
     wmBase + "/6/63/Messier_81_HST.jpg/960px-Messier_81_HST.jpg",
+    wmBase + "/2/2d/NGC_3982_galaxy_hubble.jpg/960px-NGC_3982_galaxy_hubble.jpg",
+    wmBase + "/2/25/Hubble_view_of_NGC_922.jpg/960px-Hubble_view_of_NGC_922.jpg",
+    wmBase + "/4/45/NGC_2566_imaged_by_the_Hubble_Space_Telescope.jpg/960px-NGC_2566_imaged_by_the_Hubble_Space_Telescope.jpg",
+    wmBase + "/1/17/NGC_4710_%28captured_by_the_Hubble_Space_Telescope%29.jpg/960px-NGC_4710_%28captured_by_the_Hubble_Space_Telescope%29.jpg",
+    wmBase + "/2/26/Cartwheel_Galaxy.jpg/960px-Cartwheel_Galaxy.jpg",
+    wmBase + "/c/c7/The_Cartwheel_galaxy_seen_by_MUSE_%28potw2210c%29.jpg/960px-The_Cartwheel_galaxy_seen_by_MUSE_%28potw2210c%29.jpg",
+    wmBase + "/f/f2/Messier_64_-_The_Black_Eye_Galaxy_%2849706813436%29.jpg/960px-Messier_64_-_The_Black_Eye_Galaxy_%2849706813436%29.jpg",
+    wmBase + "/7/72/Messier_83_%28captured_by_ESO%27s_1.5-metre_Danish_telescope%29.jpg/960px-Messier_83_%28captured_by_ESO%27s_1.5-metre_Danish_telescope%29.jpg",
+    wmBase + "/b/bd/Messier_33_%28M33%29.jpg/960px-Messier_33_%28M33%29.jpg",
+    wmBase + "/c/c3/NGC_4414_%28NASA-med%29.jpg/960px-NGC_4414_%28NASA-med%29.jpg",
+    wmBase + "/7/73/NGC_1672_%28without_SN%29_%28potw2445c%29.jpg/960px-NGC_1672_%28without_SN%29_%28potw2445c%29.jpg",
+    wmBase + "/0/01/NGC_1365_%28weic2403f%29.jpg/960px-NGC_1365_%28weic2403f%29.jpg",
+    wmBase + "/a/a3/The_Fireworks_Galaxy_%28NGC_6946%29.jpg/960px-The_Fireworks_Galaxy_%28NGC_6946%29.jpg",
+    wmBase + "/1/1e/Centaurus_A_%28NGC_5128%29_%28eso0315a%29.jpg/960px-Centaurus_A_%28NGC_5128%29_%28eso0315a%29.jpg",
+    wmBase + "/9/9d/LEDA_36252%2C_a_cosmic_tadpole.jpg/960px-LEDA_36252%2C_a_cosmic_tadpole.jpg",
+    wmBase + "/5/54/Hubble_Interacting_Galaxy_NGC_6050_%282008-04-24%29.jpg/960px-Hubble_Interacting_Galaxy_NGC_6050_%282008-04-24%29.jpg",
+    wmBase + "/2/24/Hubble_Interacting_Galaxy_NGC_7674_%282008-04-24%29.jpg/960px-Hubble_Interacting_Galaxy_NGC_7674_%282008-04-24%29.jpg",
+    wmBase + "/1/17/Hubble_Interacting_Galaxy_NGC_520_%282008-04-24%29.jpg/960px-Hubble_Interacting_Galaxy_NGC_520_%282008-04-24%29.jpg",
+    wmBase + "/4/45/Hubble_Interacting_Galaxy_NGC_6670_%282008-04-24%29.jpg/960px-Hubble_Interacting_Galaxy_NGC_6670_%282008-04-24%29.jpg",
+    wmBase + "/6/60/Hubble_Interacting_Galaxy_NGC_5331_%282008-04-24%29.jpg/960px-Hubble_Interacting_Galaxy_NGC_5331_%282008-04-24%29.jpg",
+    wmBase + "/5/5e/Messier83_-_Heic1403a.jpg/960px-Messier83_-_Heic1403a.jpg",
+    wmBase + "/6/68/Hubble_traces_%27string-of-pearls%27_star_clusters_in_galaxy_collisions_%28opo2404a%29.jpg/960px-Hubble_traces_%27string-of-pearls%27_star_clusters_in_galaxy_collisions_%28opo2404a%29.jpg",
   ];
 
   function getOrCreateGalaxySprite(galaxy, index) {
-    if (GLOBAL_GALAXY_SPRITE_CACHE.has(galaxy.id)) {
-      return GLOBAL_GALAXY_SPRITE_CACHE.get(galaxy.id);
+    const cacheKey = `${galaxy.id}:${index}`;
+    if (GLOBAL_GALAXY_SPRITE_CACHE.has(cacheKey)) {
+      return GLOBAL_GALAXY_SPRITE_CACHE.get(cacheKey);
     }
 
     const size = 560;
@@ -232,9 +255,10 @@
     ctx.arc(cx, cy, size * 0.42, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Load the real NASA / ESA Hubble galaxy photograph and bake radial feather + luminance alpha ONCE
-    // so it blends seamlessly into #000000 pitch-black space with zero rectangular borders and 0ms per-frame lag!
-    const photoUrl = REAL_GALAXY_PHOTOS[index % REAL_GALAXY_PHOTOS.length];
+    // 2. Load the unique high-res NASA / ESA / JWST galaxy photograph and bake radial feather + luminance alpha ONCE
+    const photoIdx = index % REAL_GALAXY_PHOTOS.length;
+    const wrapCycle = Math.floor(index / REAL_GALAXY_PHOTOS.length);
+    const photoUrl = REAL_GALAXY_PHOTOS[photoIdx];
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => {
@@ -251,7 +275,14 @@
       } else {
         drawW = size * aspect;
       }
+      tCtx.save();
+      if (wrapCycle > 0) {
+        tCtx.translate(cx, cy);
+        tCtx.rotate(wrapCycle * 1.15);
+        tCtx.translate(-cx, -cy);
+      }
       tCtx.drawImage(img, (size - drawW) / 2, (size - drawH) / 2, drawW, drawH);
+      tCtx.restore();
 
       // Apply smooth elliptical radial vignette mask so edges dissolve into pure #000000 space
       tCtx.globalCompositeOperation = "destination-in";
@@ -284,7 +315,7 @@
     };
     img.src = photoUrl;
 
-    GLOBAL_GALAXY_SPRITE_CACHE.set(galaxy.id, canvas);
+    GLOBAL_GALAXY_SPRITE_CACHE.set(cacheKey, canvas);
     return canvas;
   }
 
@@ -562,10 +593,66 @@
       }
     }
 
+    ensureSpaciousLayout() {
+      const MIN_DIST = 390;
+      const list = this.galaxies;
+      if (list.length <= 1) return;
+      for (let iter = 0; iter < 18; iter++) {
+        let moved = false;
+        for (let i = 0; i < list.length; i++) {
+          for (let j = i + 1; j < list.length; j++) {
+            const a = list[i];
+            const b = list[j];
+            let dx = b.pos_x - a.pos_x;
+            let dy = b.pos_y - a.pos_y;
+            let dz = (b.pos_z || 0) - (a.pos_z || 0);
+            let dist = Math.hypot(dx, dy, dz);
+            if (dist < 1) {
+              const ang = (j * 2.39996) % (Math.PI * 2);
+              dx = Math.cos(ang);
+              dy = Math.sin(ang) * 0.7;
+              dz = Math.sin(ang * 2) * 0.35;
+              dist = Math.hypot(dx, dy, dz);
+            }
+            if (dist < MIN_DIST) {
+              const push = (MIN_DIST - dist) * 0.52;
+              const nx = dx / dist;
+              const ny = dy / dist;
+              const nz = dz / dist;
+              if (i >= 6) {
+                a.pos_x -= nx * push;
+                a.pos_y -= ny * push * 0.8;
+                a.pos_z = (a.pos_z || 0) - nz * push * 0.45;
+              }
+              b.pos_x += nx * (i < 6 ? push * 1.85 : push);
+              b.pos_y += ny * (i < 6 ? push * 1.45 : push * 0.8);
+              b.pos_z = (b.pos_z || 0) + nz * push * 0.45;
+              moved = true;
+            }
+          }
+        }
+        if (!moved) break;
+      }
+    }
+
+    getOverviewCameraZ() {
+      let maxR = 460;
+      for (const g of this.galaxies) {
+        const r = Math.hypot(g.pos_x || 0, (g.pos_y || 0) * 1.35);
+        if (r > maxR) maxR = r;
+      }
+      return -Math.min(1750, Math.max(900, Math.round(maxR * 1.85 + 60)));
+    }
+
     setData({ galaxies = [], stars = [], constellations = [] }) {
-      this.galaxies = galaxies;
+      this.galaxies = galaxies.map((g) => ({ ...g }));
       this.stars = stars;
       this.constellations = constellations;
+      this.ensureSpaciousLayout();
+      if (this.mode === 'universe') {
+        const z = this.getOverviewCameraZ();
+        this.targetCamPos.z = z;
+      }
       this.buildGalaxySprites();
       this.syncDOMLabels();
     }
@@ -666,7 +753,7 @@
       this.selectedGalaxyId = null;
       this.selectedConstellationId = null;
       this.targetLookAt = { x: 0, y: 0, z: 0 };
-      this.targetCamPos = { x: 0, y: 8, z: -900 };
+      this.targetCamPos = { x: 0, y: 8, z: this.getOverviewCameraZ() };
       this.targetRotX = 0.1;
       this.targetRotY = 0;
 
@@ -704,7 +791,7 @@
     }
 
     zoomStep(delta) {
-      const minZ = this.mode === 'galaxy' ? -310 : -1350;
+      const minZ = this.mode === 'galaxy' ? -310 : -2200;
       const maxZ = this.mode === 'galaxy' ? -70 : -240;
       this.targetCamPos.z = Math.max(minZ, Math.min(maxZ, this.targetCamPos.z + delta));
     }

@@ -1468,15 +1468,38 @@ const store = {
     await init();
     const id = 'gal-' + crypto.randomBytes(4).toString('hex');
     const prefix = body.name.replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase() || 'GAL';
-    const count = (storageMode === 'mongodb'
-      ? await mongoDb.collection('galaxies').countDocuments()
-      : sqliteDb.prepare('SELECT COUNT(*) as c FROM galaxies').get().c) + 1;
+    const existingGalaxies = storageMode === 'mongodb'
+      ? await mongoDb.collection('galaxies').find({ status: 'active' }).toArray()
+      : sqliteDb.prepare("SELECT pos_x, pos_y, pos_z FROM galaxies WHERE status = 'active'").all();
+    const count = existingGalaxies.length + 1;
     const code = `GAL-${prefix}-${String(count).padStart(2, '0')}`;
-    const angle = (count * 1.15) % (Math.PI * 2);
-    const radius = 190 + (count % 3) * 45;
-    const posX = Math.round(Math.cos(angle) * radius);
-    const posY = Math.round(Math.sin(angle) * (radius * 0.55));
-    const posZ = Math.round(Math.sin(angle * 2) * 70);
+
+    // Spacious golden-angle spiral placement with minimum 3D separation so galaxies never cluster
+    const goldenAngle = 2.399963229728653;
+    const minDist = 410;
+    let posX = 0;
+    let posY = 0;
+    let posZ = 0;
+    for (let attempt = 0; attempt < 120; attempt++) {
+      const idx = count + attempt;
+      const ringRadius = 560 + Math.sqrt(Math.max(0, idx - 6)) * 270;
+      const angle = idx * goldenAngle;
+      const cx = Math.round(Math.cos(angle) * ringRadius);
+      const cy = Math.round(Math.sin(angle) * (ringRadius * 0.62));
+      const cz = Math.round(Math.sin(angle * 1.7) * 140);
+      const tooClose = existingGalaxies.some(
+        (eg) => Math.hypot((eg.pos_x || 0) - cx, (eg.pos_y || 0) - cy, (eg.pos_z || 0) - cz) < minDist
+      );
+      if (!tooClose) {
+        posX = cx;
+        posY = cy;
+        posZ = cz;
+        break;
+      }
+      posX = cx;
+      posY = cy;
+      posZ = cz;
+    }
     const teacherId = currentUser.role === 'admin' && body.teacher_id ? body.teacher_id : currentUser.id;
 
     const doc = {
