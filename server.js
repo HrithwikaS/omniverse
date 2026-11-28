@@ -147,6 +147,77 @@ async function generateCosmoResponse(queryText, user) {
 
   const { galaxies, stars, constellations, comets, myMissions } = await store.getCosmoContext(user);
 
+  // Live Gemini API integration when GEMINI_API_KEY is configured in .env or Render
+  const geminiApiKey = (process.env.GEMINI_API_KEY || '').trim();
+  if (geminiApiKey) {
+    try {
+      const galaxySummary = galaxies
+        .map((g) => `${g.name} (${g.category}, head: ${g.teacher_name || 'Unassigned'}, ${g.star_count || 0} stars)`)
+        .join('; ');
+      const starSummary = stars
+        .slice(0, 12)
+        .map((s) => `"${s.title}" by ${s.student_name} in ${s.galaxy_name} (${s.stellar_energy} sparks)`)
+        .join('; ');
+      const cometSummary = comets
+        .slice(0, 8)
+        .map((c) => `${c.title} on ${c.event_date} (${c.event_type})`)
+        .join('; ');
+      const missionSummary = myMissions.length
+        ? myMissions.slice(0, 5).map((m) => `"${m.title}" in ${m.galaxy_name} (${m.status})`).join('; ')
+        : 'None';
+
+      const contextBlock = [
+        COSMO_PROMPTING_CONFIG.systemPrompt,
+        `Current user: ${user ? `${user.name} (${user.role})` : 'Guest'}.`,
+        `Active Galaxies: ${galaxySummary || 'None'}.`,
+        `Approved Stars: ${starSummary || 'None'}.`,
+        `Upcoming School Comets: ${cometSummary || 'None'}.`,
+        `User Missions: ${missionSummary}.`,
+      ].join('\n');
+
+      const geminiModel = (process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim();
+      const apiRes = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(geminiModel)}:generateContent`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': geminiApiKey,
+          },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: contextBlock }] },
+            contents: [{ role: 'user', parts: [{ text: raw }] }],
+            generationConfig: {
+              temperature: 0.5,
+              maxOutputTokens: 140,
+            },
+          }),
+        }
+      );
+
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        const aiText = data?.candidates?.[0]?.content?.parts?.map((p) => p.text || '').join(' ').trim();
+        if (aiText) {
+          return {
+            reply: enforceCosmoPromptRules(aiText),
+            state: 'responding',
+            poweredBy: 'gemini',
+            suggestions: [
+              'Tell me about Raks Pallikkoodam School',
+              'What are the upcoming school events?',
+              'Show me the active galaxies',
+            ],
+          };
+        }
+      } else {
+        console.warn(`Cosmo Gemini API error (${apiRes.status}): falling back to built-in responses.`);
+      }
+    } catch (err) {
+      console.warn(`Cosmo Gemini API request failed (${err.message}): falling back to built-in responses.`);
+    }
+  }
+
   // About Raks Pallikkoodam School Coimbatore
   if (
     q.includes('raks') ||
