@@ -1736,7 +1736,7 @@ const store = {
       let filtered = allMissions;
       if (currentUser.role === 'teacher') {
         const ownedGalaxyIds = new Set(galaxies.filter((g) => g.teacher_id === currentUser.id).map((g) => g.id));
-        filtered = allMissions.filter((m) => m.status !== 'Draft' && ownedGalaxyIds.has(m.galaxy_id)).sort((a, b) => {
+        filtered = allMissions.filter((m) => m.student_id === currentUser.id || (m.status !== 'Draft' && ownedGalaxyIds.has(m.galaxy_id))).sort((a, b) => {
           const ap = (a.status === 'Submitted' || a.status === 'Under Review') ? 0 : 1;
           const bp = (b.status === 'Submitted' || b.status === 'Under Review') ? 0 : 1;
           return ap - bp || (b.submission_date || '').localeCompare(a.submission_date || '');
@@ -1786,9 +1786,9 @@ const store = {
           rev.name as reviewer_name, s.id as star_id, s.stellar_energy, s.star_classification
         FROM missions m JOIN users u ON m.student_id = u.id JOIN galaxies g ON m.galaxy_id = g.id
         LEFT JOIN users rev ON m.reviewer_id = rev.id LEFT JOIN stars s ON s.mission_id = m.id
-        WHERE m.status != 'Draft' AND g.teacher_id = ?
+        WHERE m.student_id = ? OR (m.status != 'Draft' AND g.teacher_id = ?)
         ORDER BY CASE WHEN m.status IN ('Submitted', 'Under Review') THEN 0 ELSE 1 END, m.submission_date DESC
-      `).all(currentUser.id);
+      `).all(currentUser.id, currentUser.id);
     } else {
       missions = sqliteDb.prepare(`
         SELECT m.*, COALESCE(m.explorer_name, u.name) as student_name, COALESCE(m.explorer_grade, u.grade) as student_grade,
@@ -2414,6 +2414,38 @@ const store = {
     }
     if (body.reset_password) sqliteDb.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hashPassword(body.reset_password), targetId);
     return sqliteDb.prepare('SELECT id, name, email, role, teacher_code, department, grade, section, account_status, COALESCE(full_access, 0) as full_access FROM users WHERE id = ?').get(targetId);
+  },
+
+  async deleteUser(targetId) {
+    await init();
+    if (storageMode === 'mongodb') {
+      const userStars = await mongoDb.collection('stars').find({ student_id: targetId }).toArray();
+      const starIds = userStars.map((s) => s.id);
+      await Promise.all([
+        mongoDb.collection('galaxies').updateMany({ teacher_id: targetId }, { $set: { teacher_id: null } }),
+        mongoDb.collection('missions').updateMany({ reviewer_id: targetId }, { $set: { reviewer_id: null } }),
+        mongoDb.collection('constellations').updateMany({ teacher_id: targetId }, { $set: { teacher_id: 'usr-admin-1' } }),
+        mongoDb.collection('comets').updateMany({ creator_id: targetId }, { $set: { creator_id: 'usr-admin-1' } }),
+        mongoDb.collection('users').updateMany({ created_by: targetId }, { $set: { created_by: null } }),
+        mongoDb.collection('sessions').deleteMany({ user_id: targetId }),
+        mongoDb.collection('galaxy_members').deleteMany({ student_id: targetId }),
+        mongoDb.collection('sparks').deleteMany({ $or: [{ user_id: targetId }, ...(starIds.length ? [{ star_id: { $in: starIds } }] : [])] }),
+        starIds.length ? mongoDb.collection('constellation_stars').deleteMany({ star_id: { $in: starIds } }) : Promise.resolve(),
+        mongoDb.collection('stars').deleteMany({ student_id: targetId }),
+        mongoDb.collection('missions').deleteMany({ student_id: targetId }),
+        mongoDb.collection('notifications').deleteMany({ recipient_id: targetId }),
+        mongoDb.collection('users').deleteOne({ id: targetId }),
+      ]);
+      return { deleted: true };
+    }
+
+    sqliteDb.prepare('UPDATE galaxies SET teacher_id = NULL WHERE teacher_id = ?').run(targetId);
+    sqliteDb.prepare('UPDATE missions SET reviewer_id = NULL WHERE reviewer_id = ?').run(targetId);
+    sqliteDb.prepare("UPDATE constellations SET teacher_id = 'usr-admin-1' WHERE teacher_id = ?").run(targetId);
+    sqliteDb.prepare("UPDATE comets SET creator_id = 'usr-admin-1' WHERE creator_id = ?").run(targetId);
+    sqliteDb.prepare('UPDATE users SET created_by = NULL WHERE created_by = ?').run(targetId);
+    sqliteDb.prepare('DELETE FROM users WHERE id = ?').run(targetId);
+    return { deleted: true };
   },
 
   async markTutorialSeen(userId) {

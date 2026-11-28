@@ -708,6 +708,24 @@ const server = http.createServer(async (req, res) => {
 
       const created = await store.createMission(body, currentUser, galaxy);
 
+      if ((currentUser.role === 'teacher' || currentUser.role === 'admin') && created.status !== 'Draft') {
+        const { mission: approvedMission, star: activatedStar } = await store.reviewMission(
+          created,
+          'Approve',
+          `Published directly by ${currentUser.name}.`,
+          currentUser,
+          galaxy
+        );
+        await store.logActivity(
+          currentUser,
+          'STAR_ACTIVATED',
+          `Published star "${created.title}" directly in ${galaxy.name}`,
+          'star',
+          activatedStar ? activatedStar.id : created.id
+        );
+        return sendJson(res, 201, { mission: approvedMission, star: activatedStar });
+      }
+
       if (created.status === 'Submitted' && galaxy.teacher_id) {
         await store.createNotification({
           recipientId: galaxy.teacher_id,
@@ -1088,6 +1106,30 @@ const server = http.createServer(async (req, res) => {
       }
 
       return sendJson(res, 200, { user: updatedUser });
+    }
+
+    if (pathname.startsWith('/api/users/') && method === 'DELETE') {
+      if (!currentUser || currentUser.role !== 'admin') {
+        return sendJson(res, 403, { error: 'Only Universe Administrators can delete accounts.' });
+      }
+      const targetId = pathname.split('/')[3];
+      if (targetId === currentUser.id) {
+        return sendJson(res, 400, { error: 'You cannot delete your own administrator account.' });
+      }
+      const targetUser = await store.getFullUserById(targetId);
+      if (!targetUser) return sendJson(res, 404, { error: 'User not found.' });
+      if (targetUser.role === 'admin') {
+        return sendJson(res, 403, { error: 'Administrator accounts cannot be deleted.' });
+      }
+      await store.deleteUser(targetId);
+      await store.logActivity(
+        currentUser,
+        'USER_DELETED',
+        `Deleted ${targetUser.role} account for ${targetUser.name} (${targetUser.email})`,
+        'user',
+        targetId
+      );
+      return sendJson(res, 200, { deleted: true });
     }
 
     if (pathname === '/api/admin/moderate' && method === 'POST') {

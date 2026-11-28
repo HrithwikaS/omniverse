@@ -1728,7 +1728,7 @@
         <button class="btn btn-ghost" id="wiz-prev-btn">Back</button>
         <div style="display:flex; gap:10px;">
           <button class="btn btn-ghost" id="save-draft-msn-btn">Save Draft</button>
-          <button class="btn btn-primary" id="launch-msn-btn">Launch Mission</button>
+          <button class="btn btn-primary" id="launch-msn-btn">${state.user && (state.user.role === 'teacher' || state.user.role === 'admin') ? 'Launch & Activate Star' : 'Launch Mission'}</button>
         </div>
       </div>
     `;
@@ -1891,7 +1891,7 @@
         return;
       }
       try {
-        await api('/api/missions', {
+        const res = await api('/api/missions', {
           method: 'POST',
           body: JSON.stringify({ ...d, status: statusType }),
         });
@@ -1912,11 +1912,15 @@
         state.missionStep = 1;
         await refreshUniverseData();
         renderMissionsView(root);
-        showToast(
-          statusType === 'Draft' ? 'Draft Saved' : 'Mission Launched',
-          statusType === 'Draft' ? 'Saved to your mission log.' : 'Submitted to your Galaxy Mentor for review.',
-          'success'
-        );
+        if (res.star) {
+          triggerStarActivationCeremony(res.star, res.mission || d);
+        } else {
+          showToast(
+            statusType === 'Draft' ? 'Draft Saved' : 'Mission Launched',
+            statusType === 'Draft' ? 'Saved to your mission log.' : 'Submitted to your Galaxy Mentor for review.',
+            'success'
+          );
+        }
       } catch (err) {
         showToast('Launch Error', err.message, 'error');
       }
@@ -3828,6 +3832,7 @@
                           ${t.account_status === 'active' ? 'Deactivate' : 'Activate'}
                         </button>
                         <button class="btn btn-cyan btn-sm" data-reset-pwd="${t.id}">Reset Pwd</button>
+                        <button class="btn btn-danger btn-sm" data-delete-user="${t.id}" data-user-name="${escapeHtml(t.name)}" data-user-role="teacher">Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -3953,6 +3958,7 @@
                         ${s.account_status === 'active' ? 'Suspend' : 'Activate'}
                       </button>
                       <button class="btn btn-cyan btn-sm" data-reset-pwd="${s.id}">Reset</button>
+                      <button class="btn btn-danger btn-sm" data-delete-user="${s.id}" data-user-name="${escapeHtml(s.name)}" data-user-role="student">Delete</button>
                     </div>
                   </td>
                 </tr>
@@ -4018,6 +4024,25 @@
           body: JSON.stringify({ reset_password: 'omniverse2050' }),
         });
         showToast('Password Reset', 'Temporary password reset to omniverse2050.', 'success');
+      });
+    });
+
+    container.querySelectorAll('[data-delete-user]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const uId = btn.getAttribute('data-delete-user');
+        const uName = btn.getAttribute('data-user-name') || 'this user';
+        const uRole = btn.getAttribute('data-user-role') || 'account';
+        if (!window.confirm('Permanently delete ' + uRole + ' account ' + uName + '? This cannot be undone.')) return;
+        try {
+          await api(`/api/users/${uId}`, { method: 'DELETE' });
+          const authMe = await api('/api/auth/me');
+          state.demoUsers = authMe.demoUsers || [];
+          await refreshUniverseData();
+          renderAdminPortal(document.getElementById('view-root'));
+          showToast('Account Deleted', `Removed ${uRole} account ${uName}.`, 'info');
+        } catch (err) {
+          showToast('Error', err.message, 'error');
+        }
       });
     });
   }
